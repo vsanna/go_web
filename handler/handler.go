@@ -6,6 +6,7 @@ import (
 	"fmt"
 	"html/template"
 	"net/http"
+	"os"
 	"time"
 
 	"github.com/pkg/errors"
@@ -14,12 +15,17 @@ import (
 	"github.com/vsanna/go_web/registory"
 )
 
-var repo registory.Repository
-var JstTZ *time.Location = time.FixedZone("Asia/Tokyo", 9*60*60)
+var (
+	repo  registory.Repository
+	JstTZ *time.Location
+	host  string
+)
 
 func init() {
 	cnf := config.NewConfig()
 	repo = registory.NewRepository(cnf)
+	host = os.Getenv("HOST")
+	JstTZ = time.FixedZone("Asia/Tokyo", 9*60*60)
 }
 
 /*=================================

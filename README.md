@@ -22,9 +22,10 @@ $ go run main.go
 ```
 
 ## deploy
+NOTE: This is not nice way. 
 ```bash
 # change file name of main_gea.go to main.go
-$ mv main.go main_default.go && mv main_gae.go main.go
+$ mv main.go ../ && mv main_gae.go main.go
 $ gcloud app deploy
-$ mv main.go main_gae.go && mv main_default.go main.go
+$ mv main.go main_gae.go && mv ../main.go . 
 ```

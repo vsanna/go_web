@@ -31,6 +31,7 @@ func session(w http.ResponseWriter, r *http.Request) {
 			Name:     "_sid",
 			Value:    user.AccessToken,
 			Path:     "/",
+			Domain:   host,
 			HttpOnly: true,
 			Expires:  time.Now().AddDate(0, 0, 14),
 		}

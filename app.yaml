@@ -7,3 +7,4 @@ handlers:
   script: _go_app
 
 env_variables:  
+  HOST: go-ca-dot-yomiganafy.appspot.com
