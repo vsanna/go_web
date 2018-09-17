@@ -18,13 +18,13 @@ func register(w http.ResponseWriter, r *http.Request) {
 	password := r.FormValue("password")
 
 	if email == "" || password == "" || name == "" {
-		http.Redirect(w, r, "/", http.StatusTemporaryRedirect)
+		http.Redirect(w, r, "/", http.StatusFound)
 		return
 	}
 
 	user, err := model.NewUser(name, email, password)
 	if err != nil {
-		http.Redirect(w, r, "/", http.StatusTemporaryRedirect)
+		http.Redirect(w, r, "/", http.StatusFound)
 		return
 	}
 
@@ -32,7 +32,7 @@ func register(w http.ResponseWriter, r *http.Request) {
 	urepo := repo.NewUserRepo()
 	err = urepo.Create(r.Context(), user)
 	if err != nil {
-		http.Redirect(w, r, "/", http.StatusTemporaryRedirect)
+		http.Redirect(w, r, "/", http.StatusFound)
 		return
 	}
 
@@ -45,5 +45,5 @@ func register(w http.ResponseWriter, r *http.Request) {
 	}
 	http.SetCookie(w, c)
 
-	http.Redirect(w, r, "/", http.StatusTemporaryRedirect)
+	http.Redirect(w, r, "/", http.StatusFound)
 }

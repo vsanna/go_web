@@ -33,5 +33,5 @@ func profileUpdate(w http.ResponseWriter, r *http.Request) {
 	urepo := repo.NewUserRepo()
 	_ = urepo.Update(r.Context(), user)
 
-	http.Redirect(w, r, "/profile/", http.StatusTemporaryRedirect)
+	http.Redirect(w, r, "/profile/", http.StatusFound)
 }

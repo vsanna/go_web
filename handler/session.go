@@ -23,7 +23,6 @@ func session(w http.ResponseWriter, r *http.Request) {
 	}
 
 	user, err := repo.NewUserRepo().FindByEmail(r.Context(), email)
-	users, err := repo.NewUserRepo().All(r.Context())
 	if err != nil {
 		http.Redirect(w, r, "/", http.StatusTemporaryRedirect)
 		return
