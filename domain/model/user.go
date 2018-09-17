@@ -1,7 +1,7 @@
 package model
 
 import (
-	"../../lib"
+	"github.com/vsanna/go_web/lib"
 )
 
 /*

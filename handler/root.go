@@ -3,7 +3,6 @@ package handler
 import (
 	"fmt"
 	"net/http"
-	// "../domain/model"
 )
 
 func Root(w http.ResponseWriter, r *http.Request) {

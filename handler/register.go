@@ -5,8 +5,7 @@ import (
 	"net/http"
 	"time"
 
-	"../domain/model"
-	// "../domain/model"
+	"github.com/vsanna/go_web/domain/model"
 )
 
 func Register(w http.ResponseWriter, r *http.Request) {

@@ -2,7 +2,6 @@ package handler
 
 import (
 	"net/http"
-	// "../domain/model"
 )
 
 func RegisterNew(w http.ResponseWriter, r *http.Request) {

@@ -3,7 +3,7 @@ package repository
 import (
 	"context"
 
-	"../model"
+	"github.com/vsanna/go_web/domain/model"
 )
 
 /*

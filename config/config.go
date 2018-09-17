@@ -4,7 +4,7 @@ package config
 import (
 	"fmt"
 
-	"../domain/model"
+	"github.com/vsanna/go_web/domain/model"
 )
 
 func NewConfig() *Config {

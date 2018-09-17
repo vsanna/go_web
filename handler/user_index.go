@@ -4,7 +4,7 @@ import (
 	"fmt"
 	"net/http"
 
-	"../domain/model"
+	"github.com/vsanna/go_web/domain/model"
 )
 
 func UserIndex(w http.ResponseWriter, r *http.Request) {

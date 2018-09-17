@@ -8,8 +8,8 @@ import (
 
 	"sync"
 
-	"../../config"
-	"../../domain/model"
+	"github.com/vsanna/go_web/config"
+	"github.com/vsanna/go_web/domain/model"
 )
 
 /*

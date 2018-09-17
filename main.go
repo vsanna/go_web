@@ -5,7 +5,7 @@ import (
 
 	"golang.org/x/net/http2"
 
-	"./handler"
+	"github.com/vsanna/go_web/handler"
 )
 
 func main() {

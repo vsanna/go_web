@@ -4,8 +4,8 @@ import (
 	"context"
 	"sort"
 
-	"../../config"
-	"../../domain/model"
+	"github.com/vsanna/go_web/config"
+	"github.com/vsanna/go_web/domain/model"
 )
 
 /*
@@ -15,7 +15,6 @@ import (
 - 実際にDBからデータを取得し、modelのstructとして返す
 - dao.Userはrepository.Userのinterfaceを実装する。
 - applicationはrepository.Userの実装に依存する。
-
 
 
 ## note

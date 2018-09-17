@@ -1,9 +1,9 @@
 package registory
 
 import (
-	"../config"
-	"../domain/repository"
-	"../infra/dao"
+	"github.com/vsanna/go_web/config"
+	"github.com/vsanna/go_web/domain/repository"
+	"github.com/vsanna/go_web/infra/dao"
 )
 
 /*

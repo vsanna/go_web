@@ -4,7 +4,7 @@ import (
 	"net/http"
 	"time"
 
-	"../lib"
+	"github.com/vsanna/go_web/lib"
 )
 
 func Session(w http.ResponseWriter, r *http.Request) {

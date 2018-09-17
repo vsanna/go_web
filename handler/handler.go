@@ -8,10 +8,10 @@ import (
 	"net/http"
 	"time"
 
-	"../config"
-	"../domain/model"
-	"../registory"
 	"github.com/pkg/errors"
+	"github.com/vsanna/go_web/config"
+	"github.com/vsanna/go_web/domain/model"
+	"github.com/vsanna/go_web/registory"
 )
 
 var repo registory.Repository
