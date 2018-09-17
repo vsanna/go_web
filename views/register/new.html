@@ -1,0 +1,11 @@
+{{ define "content" }}
+<div class="container">
+	<h1>signup</h1>
+	<form method="post" action="/register/">
+		<input type="text" name="name" placeholder="name" />
+		<input type="text" name="email" placeholder="email" />
+		<input type="text" name="password" placeholder="password" />
+		<input type="submit" value="send" />
+	</form>
+</div>
+{{ end }}

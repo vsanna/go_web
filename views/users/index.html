@@ -1,0 +1,20 @@
+{{ define "content" }}
+<div class="container">
+	<h1>{{.Add.Title}}</h1>
+	<table>
+		<tr>
+			<td>ID</td>
+			<td>Name</td>
+			<td>Email</td>
+		</tr>
+		{{range .Add.Users}}
+		<tr>
+			<td>{{.ID}}</td>
+			<td>{{.Name}}</td>
+			<td>{{.Email}}</td>
+		</tr>
+		{{end}}
+	</table>
+</div>
+{{ end }}
+    

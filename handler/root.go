@@ -1,0 +1,20 @@
+package handler
+
+import (
+	"fmt"
+	"net/http"
+	// "../domain/model"
+)
+
+func Root(w http.ResponseWriter, r *http.Request) {
+	log(authenticate(root))(w, r)
+}
+
+func root(w http.ResponseWriter, r *http.Request) {
+	if r.URL.Path != "/" {
+		fmt.Fprint(w, "no page")
+		return
+	}
+
+	renderHTML(w, r, nil, NewTemplateOption(), "pages/root")
+}

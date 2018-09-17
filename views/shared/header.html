@@ -1,0 +1,14 @@
+{{ define "header" }}
+	<header class="header">
+        <div class="container">
+			<div class="row">
+			<a href="/" class="name">Sample Go app</a>
+			{{ if .Cmn.UserSignedIn }}
+				<span>{{ .Cmn.CurrentUserName }}</span>
+			{{ else }}
+				<span>未ログイン</span>
+			{{ end }}
+			</div>
+        </div>
+	</header>
+{{ end }}
