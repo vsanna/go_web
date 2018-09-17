@@ -3,6 +3,7 @@ package handler
 import (
 	"fmt"
 	"net/http"
+	"sort"
 
 	"github.com/vsanna/go_web/domain/model"
 )
@@ -21,6 +22,8 @@ func userIndex(w http.ResponseWriter, r *http.Request) {
 		fmt.Fprintln(w, "not found")
 		return
 	}
+
+	sort.Slice(users, func(i, j int) bool { return users[i].ID > users[j].ID })
 
 	vals := struct {
 		Title string

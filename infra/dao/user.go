@@ -83,6 +83,17 @@ func (klass *User) Create(ctx context.Context, record *model.User) error {
 		data = append(data, d.(*model.User))
 	}
 
+	// validation.
+	// TODO 本当はどこに書くべき？
+	for _, d := range data {
+		if record.Email == d.Email {
+			return errors.New("this email has been registered")
+		}
+		if record.Name == d.Name {
+			return errors.New("this name has been registered")
+		}
+	}
+
 	// 1. idのセット
 	sort.Slice(data, func(i, j int) bool { return data[i].ID > data[j].ID })
 	fmt.Println("debug: ", data, data[0])

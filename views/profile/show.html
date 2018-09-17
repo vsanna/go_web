@@ -1,7 +1,7 @@
 {{ define "content" }}
 <div class="container">
 	<h1>User#edit</h1>
-	<form action="/users" method="post">
+	<form action="/profile" method="post">
 		<input type="hidden" name="_http_method" value="PUT">
 		<input type="text" name="name" placeholder="name" value="{{.Add.Name}}"/>
 		<input type="text" name="email" placeholder="email" value="{{.Add.Email}}" />

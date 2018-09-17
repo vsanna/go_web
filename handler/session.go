@@ -1,6 +1,7 @@
 package handler
 
 import (
+	"fmt"
 	"net/http"
 	"time"
 
@@ -15,12 +16,14 @@ func session(w http.ResponseWriter, r *http.Request) {
 	r.ParseForm()
 	email := r.FormValue("email")
 	password := r.FormValue("password")
+
 	if email == "" || password == "" {
 		http.Redirect(w, r, "/", http.StatusTemporaryRedirect)
 		return
 	}
 
 	user, err := repo.NewUserRepo().FindByEmail(r.Context(), email)
+	users, err := repo.NewUserRepo().All(r.Context())
 	if err != nil {
 		http.Redirect(w, r, "/", http.StatusTemporaryRedirect)
 		return
@@ -31,12 +34,12 @@ func session(w http.ResponseWriter, r *http.Request) {
 			Name:     "_sid",
 			Value:    user.AccessToken,
 			Path:     "/",
-			Domain:   host,
 			HttpOnly: true,
 			Expires:  time.Now().AddDate(0, 0, 14),
 		}
 		http.SetCookie(w, c)
+		http.Redirect(w, r, "/", http.StatusTemporaryRedirect)
+	} else {
+		fmt.Fprintln(w, "fail", user.EncryptedPassword, password)
 	}
-
-	http.Redirect(w, r, "/", http.StatusTemporaryRedirect)
 }

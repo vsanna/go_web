@@ -9,5 +9,8 @@ func Encrypt(str string) string {
 
 func Compare(hash, raw string) bool {
 	err := bcrypt.CompareHashAndPassword([]byte(hash), []byte(raw))
-	return err == nil
+	if err != nil {
+		return false
+	}
+	return true
 }
