@@ -23,9 +23,8 @@ $ go run main.go
 
 ## deploy
 ```bash
-# main_gae.goをmain.goにした上で
+# change file name of main_gea.go to main.go
+$ mv main.go main_default.go && mv main_gae.go main.go
 $ gcloud app deploy
+$ mv main.go main_gae.go && mv main_default.go main.go
 ```
-
-
-## 
