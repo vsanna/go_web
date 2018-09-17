@@ -1,4 +1,4 @@
-package registory
+package registry
 
 import (
 	"github.com/vsanna/go_web/config"
@@ -7,7 +7,7 @@ import (
 )
 
 /*
-# registory
+# registry
 
 ## about
 - 実実装をinterface値に変換する関数群。
@@ -40,8 +40,8 @@ func (r *repo) NewUserRepo() repository.User {
 
 /*
 # ex. もしmailerがあれば(かつsendgrid)
-// registory/mailer.go
-package registory
+// registry/mailer.go
+package registry
 type mail struct {
 	Cnf *config.Config
 }

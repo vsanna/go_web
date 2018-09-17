@@ -12,18 +12,18 @@ import (
 	"github.com/pkg/errors"
 	"github.com/vsanna/go_web/config"
 	"github.com/vsanna/go_web/domain/model"
-	"github.com/vsanna/go_web/registory"
+	"github.com/vsanna/go_web/registry"
 )
 
 var (
-	repo  registory.Repository
+	repo  registry.Repository
 	JstTZ *time.Location
 	host  string
 )
 
 func init() {
 	cnf := config.NewConfig()
-	repo = registory.NewRepository(cnf)
+	repo = registry.NewRepository(cnf)
 	host = os.Getenv("HOST")
 	JstTZ = time.FixedZone("Asia/Tokyo", 9*60*60)
 }
