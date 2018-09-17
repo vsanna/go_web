@@ -1,6 +1,6 @@
 runtime: go
 api_version: go1.9
-service: go_app 
+service: go-ca
 
 handlers:
 - url: /.*

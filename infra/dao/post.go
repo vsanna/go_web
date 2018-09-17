@@ -8,20 +8,6 @@ import (
 	"github.com/vsanna/go_web/domain/model"
 )
 
-/*
-# infra/dao
-
-## about
-- 実際にDBからデータを取得し、modelのstructとして返す
-- dao.Userはrepository.Userのinterfaceを実装する。
-- applicationはrepository.Userの実装に依存する。
-
-
-## note
-- なぜ？ => daoの実装を気にせずに済ませたいから
-
-*/
-
 type Post struct {
 	Cnf *config.Config
 }

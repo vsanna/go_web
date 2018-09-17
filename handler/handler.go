@@ -22,6 +22,9 @@ func init() {
 	repo = registory.NewRepository(cnf)
 }
 
+/*=================================
+* Logginng
+=================================*/
 type ResponseWriterWithStatus struct {
 	http.ResponseWriter
 	statusCode int
@@ -44,6 +47,9 @@ func log(h func(w http.ResponseWriter, r *http.Request)) func(w http.ResponseWri
 	}
 }
 
+/*=================================
+* Authentication
+=================================*/
 type ctxKey string
 
 const currentUserKey ctxKey = "currentUser"
@@ -61,6 +67,9 @@ func authenticate(h func(w http.ResponseWriter, r *http.Request)) func(w http.Re
 	}
 }
 
+/*=================================
+* Authorize
+=================================*/
 func authorize(h func(w http.ResponseWriter, r *http.Request)) func(w http.ResponseWriter, r *http.Request) {
 	return func(w http.ResponseWriter, r *http.Request) {
 		if UserSignedIn(r.Context()) {
@@ -72,6 +81,9 @@ func authorize(h func(w http.ResponseWriter, r *http.Request)) func(w http.Respo
 	}
 }
 
+/*=================================
+* Helpers
+=================================*/
 func UserSignedIn(ctx context.Context) bool {
 	return CurrentUser(ctx) != nil
 }
@@ -100,6 +112,9 @@ func detectUserFromRequest(r *http.Request) (*model.User, error) {
 	return user, nil
 }
 
+/*=================================
+* Rendering
+=================================*/
 type TemplateOption struct {
 	Layout    string
 	HasHeader bool

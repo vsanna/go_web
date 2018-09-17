@@ -10,29 +10,13 @@ import (
 # registory
 
 ## about
-- [?] これはなに？
+- 実実装をinterface値に変換する関数群。
 - 実装だけ見ると、daoのDB操作をrepositoryのinterfaceに隠す場所？
 	- repository.User.Findでdao.User.Findを隠す
 
 
-repo = registory.NewRepository(cnf)
-// repoは
-userRepo = repo.NewUserRepo()
-
-
-## note
-- Repository, repoはここにあるべき?
-
-userrepo := registry.NewUserRepo()
-userrepo.Create()
-
-などのほうがわかりやすくないか？
-repository.NewUserRepo() だともっと良さそう
-
-
 */
 
-// このinterfaceいる？
 type Repository interface {
 	NewUserRepo() repository.User
 }
@@ -53,3 +37,44 @@ func (r *repo) NewUserRepo() repository.User {
 		Cnf: r.Cnf,
 	}
 }
+
+/*
+# ex. もしmailerがあれば(かつsendgrid)
+// registory/mailer.go
+package registory
+type mail struct {
+	Cnf *config.Config
+}
+
+type Mailer interface {
+	NewSendGrid() mailer.Sendgrid // interface値を返す
+}
+
+func NewMailer(cnf *config.Config) Mailer {
+	return &mail{
+		Cnf: cnf,
+	}
+}
+
+func (m *mailer) NewUserMailer() mailer.UserMailer {
+	return &mailerservice.UserMailer {
+		Cnf: m.Cnf
+	}
+}
+
+// domain/mailer/user_mailer.go
+package mailer
+interface UserMailer interface {
+	Send() error
+}
+
+// infra/mailerservice/user_mailer.go
+package mailerservice
+type UserMailer {
+	Cnf: *config.Config
+}
+
+func (m *UserMailer) Send() error {
+	// 個別外部サービスのAPIをcallしてメールを送る
+}
+*/

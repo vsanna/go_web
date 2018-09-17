@@ -21,10 +21,8 @@ import (
 - applicationはrepository.Userの実装に依存する。
 
 
-
 ## note
-- なんで？？
-
+- なぜ？ => daoの実装を気にせずに済ませたいから
 */
 
 type User struct {
