@@ -22,14 +22,13 @@ var (
 
 func setUp() {
 	mux = http.NewServeMux()
-
-	// サーバーが返すresponseを受け取るハコ
-	writer = httptest.NewRecorder()
+	mux.HandleFunc("/", Root)
+	os.Setenv("GOAPP_ENV", "test")
 }
 
 func TestRoot(t *testing.T) {
+	writer = httptest.NewRecorder()
 	// setUpと合わせて、テストするリクエスト(とそれにだけ対応するサーバー)を用意
-	mux.HandleFunc("/", Root)
 	req, _ := http.NewRequest("GET", "/", nil)
 
 	// リクエスト実行
@@ -42,7 +41,7 @@ func TestRoot(t *testing.T) {
 }
 
 func TestNotFound(t *testing.T) {
-	mux.HandleFunc("/", Root)
+	writer = httptest.NewRecorder()
 	req, _ := http.NewRequest("GET", "/no_exist", nil)
 	mux.ServeHTTP(writer, req)
 

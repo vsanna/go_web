@@ -78,13 +78,17 @@ func (rww *ResponseWriterWithStatus) WriteHeader(code int) {
 
 func log(h http.HandlerFunc) http.HandlerFunc {
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
-		s := time.Now()
-		fmt.Printf("Started %s \"%s\" for %s at %s \n", r.Method, r.URL.Path, r.URL.Host, s.In(JstTZ).Format("2006-01-02 15:04:05 +09:00"))
-		rww := &ResponseWriterWithStatus{ResponseWriter: w}
-		h(rww, r)
+		if os.Getenv("GOAPP_ENV") != "test" {
+			s := time.Now()
+			fmt.Printf("Started %s \"%s\" for %s at %s \n", r.Method, r.URL.Path, r.URL.Host, s.In(JstTZ).Format("2006-01-02 15:04:05 +09:00"))
+			rww := &ResponseWriterWithStatus{ResponseWriter: w}
+			h(rww, r)
 
-		duration := time.Since(s)
-		fmt.Printf("Completed %d %s in %dmsec \n", rww.statusCode, http.StatusText(rww.statusCode), duration.Nanoseconds())
+			duration := time.Since(s)
+			fmt.Printf("Completed %d %s in %dmsec \n", rww.statusCode, http.StatusText(rww.statusCode), duration.Nanoseconds())
+		} else {
+			h(w, r)
+		}
 	})
 }
 
@@ -199,7 +203,7 @@ func renderHTML(w http.ResponseWriter, r *http.Request, data interface{}, option
 
 	var paths []string
 	for _, p := range viewPaths {
-		paths = append(paths, fmt.Sprintf("views/%s.html", p))
+		paths = append(paths, fmt.Sprintf("%s/views/%s.html", os.Getenv("GOPATH")+"/src/github.com/vsanna/go_web", p))
 	}
 	t := template.Must(template.ParseFiles(paths...))
 
