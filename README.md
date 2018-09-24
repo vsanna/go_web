@@ -28,4 +28,7 @@ NOTE: This is not nice way.
 $ mv main.go ../ && mv main_gae.go main.go
 $ gcloud app deploy
 $ mv main.go main_gae.go && mv ../main.go . 
+
+# concat
+$ mv main.go ../ && mv main_gae.go main.go & gcloud app deploy & mv main.go main_gae.go && mv ../main.go .
 ```
