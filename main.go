@@ -3,22 +3,34 @@ package main
 import (
 	"net/http"
 
+	"golang.org/x/net/http2"
+
 	"github.com/vsanna/go_web/handler"
 )
 
-func init() {
-	http.HandleFunc("/ping", handler.Ping)
-	http.HandleFunc("/json", handler.JSONSample)
+func main() {
+	mux := http.NewServeMux()
+	mux.HandleFunc("/ping", handler.Ping)
+	mux.HandleFunc("/json", handler.JSONSample)
 
-	http.HandleFunc("/users/", handler.UserRequest)
-	http.HandleFunc("/profile/", handler.ProfileRequest)
+	mux.HandleFunc("/users/", handler.UserRequest)
+	mux.HandleFunc("/profile/", handler.ProfileRequest)
+	// mux.HandleFunc("/users/", handler.UserIndex)
 
-	http.HandleFunc("/register/new", handler.RegisterNew)
-	http.HandleFunc("/register/", handler.Register)
+	mux.HandleFunc("/register/new", handler.RegisterNew)
+	mux.HandleFunc("/register/", handler.Register)
+	mux.HandleFunc("/signin/new", handler.SessionNew)
+	mux.HandleFunc("/signin/", handler.Session)
+	mux.HandleFunc("/signout/", handler.SessionDelete)
 
-	http.HandleFunc("/signin/new", handler.SessionNew)
-	http.HandleFunc("/signin/", handler.Session)
-	http.HandleFunc("/signout/", handler.SessionDelete)
 	// NOTE 404処理はここでおこなう...? -> それっぽい動きはしている
-	http.HandleFunc("/", handler.Root)
+	mux.HandleFunc("/", handler.Root)
+
+	server := &http.Server{
+		Addr:    "127.0.0.1:5000",
+		Handler: mux,
+	}
+
+	http2.ConfigureServer(server, &http2.Server{})
+	server.ListenAndServe()
 }

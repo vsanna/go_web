@@ -6,7 +6,7 @@ import (
 )
 
 func Ping(w http.ResponseWriter, r *http.Request) {
-	log(authenticate(ping))(w, r)
+	NonAuthorizeWrapper(ping)(w, r)
 }
 
 func ping(w http.ResponseWriter, r *http.Request) {

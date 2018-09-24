@@ -5,7 +5,7 @@ import (
 )
 
 func SessionNew(w http.ResponseWriter, r *http.Request) {
-	log(authenticate(sessionNew))(w, r)
+	NonAuthorizeWrapper(sessionNew)(w, r)
 }
 
 func sessionNew(w http.ResponseWriter, r *http.Request) {

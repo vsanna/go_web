@@ -9,7 +9,7 @@ import (
 )
 
 func UserIndex(w http.ResponseWriter, r *http.Request) {
-	log(authenticate(authorize(userIndex)))(w, r)
+	AuthorizeWrapper(userIndex)(w, r)
 }
 
 func userIndex(w http.ResponseWriter, r *http.Request) {

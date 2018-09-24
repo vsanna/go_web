@@ -6,7 +6,7 @@ import (
 )
 
 func Root(w http.ResponseWriter, r *http.Request) {
-	log(authenticate(root))(w, r)
+	NonAuthorizeWrapper(root)(w, r)
 }
 
 func root(w http.ResponseWriter, r *http.Request) {

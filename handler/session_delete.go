@@ -5,7 +5,7 @@ import (
 )
 
 func SessionDelete(w http.ResponseWriter, r *http.Request) {
-	log(authenticate(sessionDelete))(w, r)
+	NonAuthorizeWrapper(sessionDelete)(w, r)
 }
 
 func sessionDelete(w http.ResponseWriter, r *http.Request) {

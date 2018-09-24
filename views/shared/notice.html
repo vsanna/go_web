@@ -1,0 +1,21 @@
+{{ define "notice" }}
+<div class="notice-wrapper">
+    
+	{{ if .Cmn.Flash.HasNotice }}
+	<div class="notice">
+		<div class="container">
+			<div class="message">{{ .Cmn.Flash.Notice }}</div>
+		</div>
+	</div>
+    {{ end }}
+  
+	{{ if .Cmn.Flash.HasAlert }}
+	<div class="alert">
+		<div class="container">
+			<div class="message">{{ .Cmn.Flash.Alert }}</div>
+		</div>
+	</div>
+    {{ end }}
+  
+</div>
+{{ end }}

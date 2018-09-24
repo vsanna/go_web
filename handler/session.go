@@ -1,15 +1,14 @@
 package handler
 
 import (
-	"fmt"
 	"net/http"
-	"time"
 
-	"github.com/vsanna/go_web/lib"
+	"github.com/vsanna/go_web/lib/flash"
+	"github.com/vsanna/go_web/usecase"
 )
 
 func Session(w http.ResponseWriter, r *http.Request) {
-	log(authenticate(session))(w, r)
+	session(w, r)
 }
 
 func session(w http.ResponseWriter, r *http.Request) {
@@ -17,28 +16,14 @@ func session(w http.ResponseWriter, r *http.Request) {
 	email := r.FormValue("email")
 	password := r.FormValue("password")
 
-	if email == "" || password == "" {
-		http.Redirect(w, r, "/", http.StatusTemporaryRedirect)
-		return
-	}
+	err := usecase.NewSigninUsecase(repo.NewUserRepo()).Signin(r.Context(), email, password)
 
-	user, err := repo.NewUserRepo().FindByEmail(r.Context(), email)
 	if err != nil {
-		http.Redirect(w, r, "/", http.StatusTemporaryRedirect)
+		flash.SetAlert(w, err.Error())
+		http.Redirect(w, r, "/signin/new", http.StatusSeeOther)
 		return
 	}
 
-	if lib.Compare(user.EncryptedPassword, password) {
-		c := &http.Cookie{
-			Name:     "_sid",
-			Value:    user.AccessToken,
-			Path:     "/",
-			HttpOnly: true,
-			Expires:  time.Now().AddDate(0, 0, 14),
-		}
-		http.SetCookie(w, c)
-		http.Redirect(w, r, "/", http.StatusTemporaryRedirect)
-	} else {
-		fmt.Fprintln(w, "fail", user.EncryptedPassword, password)
-	}
+	flash.SetNotice(w, "success!")
+	http.Redirect(w, r, "/", http.StatusSeeOther)
 }

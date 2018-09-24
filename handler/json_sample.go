@@ -2,26 +2,22 @@ package handler
 
 import (
 	"net/http"
+
+	"github.com/vsanna/go_web/usecase"
 )
 
 func JSONSample(w http.ResponseWriter, r *http.Request) {
-	log(authenticate(authorize(json_sample)))(w, r)
+	AuthorizeWrapper(json_sample)(w, r)
 }
 
 func json_sample(w http.ResponseWriter, r *http.Request) {
-	urepo := repo.NewUserRepo()
-	users, _ := urepo.All(r.Context())
-
-	// pluck処理. gormにはPluckがあるみたい
-	data := []userSample{}
-	for _, u := range users {
-		data = append(data, userSample{
-			ID:    u.ID,
-			Name:  u.Name,
-			Email: u.Email,
-		})
+	users, err := usecase.NewJsonExample(repo.NewUserRepo()).Fetch(r.Context())
+	if err != nil {
+		http.Error(w, "cannot fetch users", http.StatusInternalServerError)
+		return
 	}
-	renderJSON(w, r, data)
+
+	renderJSON(w, r, users)
 }
 
 type userSample struct {

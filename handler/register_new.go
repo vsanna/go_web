@@ -5,7 +5,7 @@ import (
 )
 
 func RegisterNew(w http.ResponseWriter, r *http.Request) {
-	log(authenticate(registerNew))(w, r)
+	NonAuthorizeWrapper(registerNew)(w, r)
 }
 
 func registerNew(w http.ResponseWriter, r *http.Request) {

@@ -12,6 +12,7 @@ import (
 	"github.com/pkg/errors"
 	"github.com/vsanna/go_web/config"
 	"github.com/vsanna/go_web/domain/model"
+	"github.com/vsanna/go_web/lib/flash"
 	"github.com/vsanna/go_web/registry"
 )
 
@@ -29,6 +30,40 @@ func init() {
 }
 
 /*=================================
+* Handler Wrapper
+=================================*/
+func AuthorizeWrapper(h http.HandlerFunc) http.HandlerFunc {
+	wrappers := []func(h http.HandlerFunc) http.HandlerFunc{
+		authorize,
+		authenticate,
+		flash.ClearFlashMessage,
+		recoverFromPanic,
+		log,
+	}
+
+	for _, wrapper := range wrappers {
+		h = wrapper(h)
+	}
+
+	return h
+}
+
+func NonAuthorizeWrapper(h http.HandlerFunc) http.HandlerFunc {
+	wrappers := []func(h http.HandlerFunc) http.HandlerFunc{
+		authenticate,
+		flash.ClearFlashMessage,
+		recoverFromPanic,
+		log,
+	}
+
+	for _, wrapper := range wrappers {
+		h = wrapper(h)
+	}
+
+	return h
+}
+
+/*=================================
 * Logginng
 =================================*/
 type ResponseWriterWithStatus struct {
@@ -41,8 +76,8 @@ func (rww *ResponseWriterWithStatus) WriteHeader(code int) {
 	rww.ResponseWriter.WriteHeader(code)
 }
 
-func log(h func(w http.ResponseWriter, r *http.Request)) func(w http.ResponseWriter, r *http.Request) {
-	return func(w http.ResponseWriter, r *http.Request) {
+func log(h http.HandlerFunc) http.HandlerFunc {
+	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		s := time.Now()
 		fmt.Printf("Started %s \"%s\" for %s at %s \n", r.Method, r.URL.Path, r.URL.Host, s.In(JstTZ).Format("2006-01-02 15:04:05 +09:00"))
 		rww := &ResponseWriterWithStatus{ResponseWriter: w}
@@ -50,7 +85,22 @@ func log(h func(w http.ResponseWriter, r *http.Request)) func(w http.ResponseWri
 
 		duration := time.Since(s)
 		fmt.Printf("Completed %d %s in %dmsec \n", rww.statusCode, http.StatusText(rww.statusCode), duration.Nanoseconds())
-	}
+	})
+}
+
+/*=================================
+* Recover from panic
+=================================*/
+func recoverFromPanic(h http.HandlerFunc) http.HandlerFunc {
+	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		defer func() {
+			if r := recover(); r != nil {
+				http.Error(w, "internal server error", http.StatusInternalServerError)
+				return
+			}
+		}()
+		h(w, r)
+	})
 }
 
 /*=================================
@@ -60,8 +110,8 @@ type ctxKey string
 
 const currentUserKey ctxKey = "currentUser"
 
-func authenticate(h func(w http.ResponseWriter, r *http.Request)) func(w http.ResponseWriter, r *http.Request) {
-	return func(w http.ResponseWriter, r *http.Request) {
+func authenticate(h http.HandlerFunc) http.HandlerFunc {
+	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		user, err := detectUserFromRequest(r)
 		if err != nil {
 			h(w, r)
@@ -70,21 +120,21 @@ func authenticate(h func(w http.ResponseWriter, r *http.Request)) func(w http.Re
 			ctx = context.WithValue(ctx, currentUserKey, user)
 			h(w, r.WithContext(ctx))
 		}
-	}
+	})
 }
 
 /*=================================
 * Authorize
 =================================*/
-func authorize(h func(w http.ResponseWriter, r *http.Request)) func(w http.ResponseWriter, r *http.Request) {
-	return func(w http.ResponseWriter, r *http.Request) {
+func authorize(h http.HandlerFunc) http.HandlerFunc {
+	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		if UserSignedIn(r.Context()) {
 			h(w, r)
 		} else {
 			w.WriteHeader(http.StatusUnauthorized)
 			fmt.Fprint(w, "not authorized")
 		}
-	}
+	})
 }
 
 /*=================================
@@ -137,6 +187,7 @@ func NewTemplateOption() TemplateOption {
 
 // TODO 本当はrequestに依存したくないけど、しょうがない
 func renderHTML(w http.ResponseWriter, r *http.Request, data interface{}, option TemplateOption, viewPaths ...string) {
+	viewPaths = append(viewPaths, "shared/notice")
 	viewPaths = append(viewPaths, option.Layout)
 	if option.HasHeader {
 		viewPaths = append(viewPaths, "shared/header")
@@ -172,18 +223,22 @@ func genHTMLData(r *http.Request, data interface{}) interface{} {
 	}
 
 	return struct {
-		Cmn interface{}
+		Cmn CommonTemplateVariables
 		Add interface{}
 	}{
-		Cmn: struct {
-			UserSignedIn    bool
-			CurrentUserName string
-		}{
+		Cmn: CommonTemplateVariables{
 			UserSignedIn:    UserSignedIn(r.Context()),
 			CurrentUserName: uname,
+			Flash:           flash.NewFlashFromCookie(r),
 		},
 		Add: data,
 	}
+}
+
+type CommonTemplateVariables struct {
+	UserSignedIn    bool
+	CurrentUserName string
+	Flash           *flash.Flash
 }
 
 func renderJSON(w http.ResponseWriter, r *http.Request, data interface{}) {

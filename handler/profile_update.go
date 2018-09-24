@@ -2,36 +2,35 @@ package handler
 
 import (
 	"net/http"
+
+	"github.com/vsanna/go_web/usecase"
+	"github.com/vsanna/go_web/usecase/input"
 )
 
 func ProfileUpdate(w http.ResponseWriter, r *http.Request) {
-	log(authenticate(authorize(profileUpdate)))(w, r)
+	AuthorizeWrapper(profileUpdate)(w, r)
 }
 
 func profileUpdate(w http.ResponseWriter, r *http.Request) {
 	user := CurrentUser(r.Context())
+	if user == nil {
+		panic("broken")
+	}
 
 	r.ParseForm()
-	name := user.Name
-	if n := r.FormValue("name"); n != "" {
-		name = n
+
+	updateUserInput := &input.UpdateUser{
+		User:     user,
+		Name:     r.FormValue("name"),
+		Email:    r.FormValue("email"),
+		Password: r.FormValue("password"),
 	}
 
-	email := user.Email
-	if e := r.FormValue("email"); e != "" {
-		email = e
+	err := usecase.NewUpdateUserUsecase(repo.NewUserRepo()).Update(r.Context(), updateUserInput)
+	if err != nil {
+		http.Error(w, "failed to update", http.StatusBadRequest)
+		return
 	}
-
-	password := r.FormValue("password")
-	if password != "" {
-		user.SetEncryptedPassword(password)
-	}
-
-	user.Name = name
-	user.Email = email
-
-	urepo := repo.NewUserRepo()
-	_ = urepo.Update(r.Context(), user)
 
 	http.Redirect(w, r, "/profile/", http.StatusFound)
 }
