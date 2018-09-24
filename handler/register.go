@@ -1,14 +1,13 @@
 package handler
 
 import (
+	"fmt"
 	"net/http"
 	"time"
 
 	"github.com/vsanna/go_web/lib/flash"
 	"github.com/vsanna/go_web/usecase"
 	"github.com/vsanna/go_web/usecase/input"
-
-	customerr "github.com/vsanna/go_web/error"
 )
 
 func Register(w http.ResponseWriter, r *http.Request) {
@@ -25,17 +24,12 @@ func register(w http.ResponseWriter, r *http.Request) {
 
 	user, err := usecase.NewRegisterUsecase(repo.NewUserRepo()).Register(r.Context(), input)
 
+	fmt.Println(err)
+
 	if err != nil {
-		switch e := err.(type) {
-		case *customerr.InvalidParamsError:
-			flash.SetAlert(w, e.Error())
-			http.Redirect(w, r, "/", http.StatusBadRequest)
-			return
-		case *customerr.InvalidModelError:
-			flash.SetAlert(w, e.Error())
-			http.Redirect(w, r, "/", http.StatusBadRequest)
-			return
-		}
+		flash.SetAlert(w, err.Error())
+		http.Redirect(w, r, "/register/new", http.StatusSeeOther)
+		return
 	}
 
 	c := &http.Cookie{
@@ -47,5 +41,6 @@ func register(w http.ResponseWriter, r *http.Request) {
 	}
 	http.SetCookie(w, c)
 	flash.SetNotice(w, "success!!")
+
 	http.Redirect(w, r, "/", http.StatusFound)
 }
