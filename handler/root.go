@@ -11,6 +11,7 @@ func Root(w http.ResponseWriter, r *http.Request) {
 
 func root(w http.ResponseWriter, r *http.Request) {
 	if r.URL.Path != "/" {
+		w.WriteHeader(http.StatusNotFound)
 		fmt.Fprint(w, "no page")
 		return
 	}

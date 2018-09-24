@@ -10,5 +10,5 @@ func Ping(w http.ResponseWriter, r *http.Request) {
 }
 
 func ping(w http.ResponseWriter, r *http.Request) {
-	fmt.Fprintln(w, "pong")
+	fmt.Fprint(w, "pong")
 }
